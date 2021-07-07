@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+<div class="main">
+  <div class="main_box">
+    <h1>Учет моих расходов</h1>
+    <div class="container">
+      <div class="container_items">
+        <div class="container_box">
+          <div class="container_item max_width">
+            <p>Куда было потрачено:</p>
+            <input type="text" placeholder="Куда было потрачено:" id="add-expenses2" >
+          </div>
+          <div class="container_item">
+            <p>Сколько было потрачено:</p>
+            <input type="text" placeholder="Сколько было потрачено:" id="add-expenses">
+          </div>
+          <button onclick="onClickButton()">Добавить</button>
+        </div>
+        <div class="sum_text">
+          <p>Итого:</p>
+          <p id="sum"></p>
+        </div>
+        <div id="content-page"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
