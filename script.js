@@ -1,19 +1,26 @@
 let allExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
-let valueInput = '';
-let valueInput2 = '';
-let input = null;
-let input2 = null;
+let valueCost= '';
+let valueSpent = '';
+let inputCost = null;
+let inputSpent = null;
 let flag = false;
 let curentIndex;
-let text;
-let text2;
+let Cost;
+let Score;
 let sum;
+const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+"Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+const dateObj = new Date();
+const month = monthNames[dateObj.getMonth()];
+const day = String(dateObj.getDate()).padStart(2, '0');
+const year = dateObj.getFullYear();
+const output = month  + ' ' + day  + '.' + year;
 
 window.onload = async function init () {
-	input = document.getElementById('add-expenses');
-  input2 = document.getElementById('add-expenses2');
-	input.addEventListener('change', updateValue);
-  input2.addEventListener('change', updateValue2);
+	inputCost = document.getElementById('add-expenses');
+  inputSpent = document.getElementById('add-expenses2');
+	inputCost.addEventListener('change', updateCost);
+  inputSpent.addEventListener('change', updateSpent);
 
 	const resp = await fetch('http:/localhost:8000/allExpenses', {
 		method: 'GET'
@@ -26,12 +33,15 @@ window.onload = async function init () {
 };	
 
 sumFunction = async () => {
-	const resp2 = await fetch('http:/localhost:8000/ExpensesSum', {
-		method: 'GET'
-	});
-	const result2 = await resp2.json();
-	sum = result2.sum;
-	document.getElementById('sum').textContent = sum ;
+	testFunction = (arr) => {
+    let sum = 0 ;
+    arr.forEach(element => {
+      let {_id, Cost, Score} = element;
+      sum += Number(Cost);
+    });
+    return sum;
+  };
+	document.getElementById('sum').textContent = testFunction(allExpenses) + " р." ;
 }
 
 onClickButton = async () => {
@@ -42,32 +52,33 @@ onClickButton = async () => {
 			'Access-Control-Alow-Origin': '*'
 		},
 		body: JSON.stringify( {
-			text: valueInput ,
-      text2: valueInput2,
+			Score: valueSpent,
+			Cost: valueCost,
+			date: output
 		})
 	});
-	sumFunction();
 	const result = await resp.json();
 	allExpenses = result.data;
 	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 	localStorage.setItem('sum', sum);
-	valueInput = "";
-  valueInput2 = "";
-	input.value = "";
-  input2.value = "";
+	valueCost= "";
+  valueSpent = "";
+	inputCost.value = "";
+  inputSpent.value = "";
 
+	sumFunction();
 	render();
 };
 
-updateValue = (event) => {
-	valueInput = event.target.value;
+updateCost = (event) => {
+	valueCost = event.target.value;
 };
 
-updateValue2 = (event) => {
-  valueInput2 = event.target.value;
+updateSpent = (event) => {
+  valueSpent = event.target.value;
 };
 
-render = async ()  => {
+render = async () => {
 	const content = document.getElementById('content-page');
 
 	while(content.firstChild) {
@@ -78,29 +89,43 @@ render = async ()  => {
 		const container = document.createElement('div');
 		container.id = `expenses-${index}`;
 		container.className = 'expenses-container';
-		const checkbox = document.createElement('p');
+		
+		const box = document.createElement('div');
+		box.className = 'expenses-box';
+		container.appendChild(box);
 
-		checkbox.onchange = function () {
-			onChangeCheckBox(index);
+		const boxPrice = document.createElement('div');
+		boxPrice.className = 'expenses-boxPrice';
+		container.appendChild(boxPrice);
+
+		const numbering = document.createElement('p');
+		numbering.textContent = index + 1 + ")";
+		
+		numbering.onchange = function () {
+			onChangeNumbering(index);
 		}
-		container.appendChild(checkbox);
+		box.appendChild(numbering);
 
 		if (index === curentIndex) {
-			const text2 = document.createElement('input');
-			text2.type = 'text';
-			text2.value = item.text2;
-			text2.id = 'inputId2';
-			container.appendChild(text2);
+			const textScore = document.createElement('input');
+			textScore.type = 'text';
+			textScore.value = item.Score;
+			textScore.id = 'inputId2';
+			container.appendChild(textScore);
+			
+			const textCost = document.createElement('input');
+			textCost.type = 'number';
+			textCost.value = item.Cost;
+			textCost.id = 'inputId';
+			container.appendChild(textCost);
 
-			const text = document.createElement('input');
-			text.type = 'text';
-			text.value = item.text;
-			text.id = 'inputId';
-			container.appendChild(text);
-
+			const boxImg = document.createElement('div');
+			boxImg.className = 'expenses-boxImg';
+			container.appendChild(boxImg);
+			
 			const imageClear = document.createElement('img'); 
 			imageClear.src = 'images/clear.svg';
-			container.appendChild(imageClear);
+			boxImg.appendChild(imageClear);
 
 			imageClear.onclick = function () {
 				EditClear(index);
@@ -108,41 +133,47 @@ render = async ()  => {
 
 			const imageOk = document.createElement('img');
 			imageOk.src = 'images/ok.svg';
-			container.appendChild(imageOk);
+			boxImg.appendChild(imageOk);
 			imageOk.onclick = function () {
 				EditOk(index);
 			};
 		} else {
 			const text2 = document.createElement('p');
 			const text = document.createElement('p');
-			text2.innerText = item.text2;
-			text.innerText = item.text;
+			const dateText = document.createElement('p')
+			
+			const boxImg = document.createElement('div');
+			boxImg.className = 'expenses-boxImg';
+			container.appendChild(boxImg);
+
+			const imageEdit = document.createElement('img');
+			imageEdit.src = 'images/edit.svg';
+			boxImg.appendChild(imageEdit);
+
+			imageEdit.onclick = function () {
+				EditItem(index);
+			};
+
+			const imageDelete = document.createElement('img');
+			imageDelete.src = 'images/delete.svg';
+			boxImg.appendChild(imageDelete);
+		
+			imageDelete.onclick = function () {
+				DeleteItem(index,container);
+			};
+			dateText.textContent = item.date;
+			text2.innerText = "Магазин " + `"${item.Score}"`;
+			text.innerText = item.Cost + ' р.';
 			text.className = item.isCheck ? 'text-expenses done-text' : 'text-expenses';
-      
-			container.appendChild(text2);
-			container.appendChild(text);
+			box.appendChild(text2);
+			box.appendChild(dateText);
+			boxPrice.appendChild(text);
 		};	
-
-		const imageEdit = document.createElement('img');
-		imageEdit.src = 'images/edit.svg';
-		container.appendChild(imageEdit);
-
-		imageEdit.onclick = function () {
-			EditItem(index);
-		};
-
-		const imageDelete = document.createElement('img');
-		imageDelete.src = 'images/delete.svg';
-		container.appendChild(imageDelete);
-	
-		imageDelete.onclick = function () {
-			DeleteItem(index,container);
-		};
 		content.appendChild(container);
 	});
 };
 
-onChangeCheckBox = (index) => {
+onChangeNumbering = (index) => {
 	allExpenses[index].isCheck = !allExpenses[index].isCheck;
 	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 
@@ -150,13 +181,11 @@ onChangeCheckBox = (index) => {
 };
 
 EditOk = async (index) => {
-	input = document.getElementById('inputId');
-	input.addEventListener('change', updateValue);
+	inputCost = document.getElementById('inputId');
+	inputCost.addEventListener('change', updateCost);
 
-	input2 = document.getElementById('inputId2');
-	input2.addEventListener('change', updateValue2);
-
-	console.log("gg", input2.value)
+	inputSpent = document.getElementById('inputId2');
+	inputSpent.addEventListener('change', updateSpent);
 
 	const resp = await fetch('http://localhost:8000/editExpenses', {
 		method: 'PATCH',
@@ -165,8 +194,9 @@ EditOk = async (index) => {
 			'Access-Control-Alow-Origin': '*'
 		},
 		body: JSON.stringify( {
-			text: input.value,
-			text2: input2.value
+			_id: allExpenses[index]._id,
+			Cost: inputCost.value,
+			Score: inputSpent.value,
 		})
 	});
 	const result = await resp.json();
@@ -194,10 +224,9 @@ DeleteItem = async (index, item) => {
 	const resp = await fetch(`http://localhost:8000/deleteExpenses?_id=${allExpenses[index]._id}`, {
 		method: 'DELETE'
 	});
-	console.log(allExpenses[index]._id);
 	const result = await resp.json();
 	allExpenses = result.data;
-	localStorage.setItem('tasks', JSON.stringify(allExpenses));
+	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 
 	sumFunction()
 	render();
