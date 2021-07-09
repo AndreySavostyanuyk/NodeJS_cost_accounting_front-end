@@ -39,7 +39,6 @@ h1 {
 }
 
 .main_box {
-  height: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,8 +100,10 @@ input[type="number"]::-webkit-inner-spin-button {
 .expenses-box {
   display: flex;
   flex-direction: row;
+  width: 50%;
 }
 
 .expenses-boxImg {
   display: flex;
 }
+

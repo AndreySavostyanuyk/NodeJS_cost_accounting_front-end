@@ -33,14 +33,18 @@ window.onload = async function init () {
 };	
 
 sumFunction = async (arr) => {
-	let initialValue = 0;
-	let sum = arr.reduce(function (accumulator, currentValue) {
-    return accumulator + currentValue.Cost;
-}, initialValue)
+
+	let sum = arr.reduce((acc,el) => acc + el.Cost, 0)
 	document.getElementById('sum').textContent = `${sum} р.` ;
 };
 
 onClickButton = async () => {
+
+	if(inputCost.value === "" || inputSpent.value === ""){
+		alert("заполните все данные")
+		return
+	} 
+
 	const resp = await fetch('http://localhost:8000/createExpenses', {
 		method: 'POST',
 		headers: {
@@ -109,6 +113,8 @@ render = async () => {
 			inputTextScore.id = 'inputId2';
 			container.appendChild(inputTextScore);
 			
+			box.className = 'displayNone';
+
 			const inputTextCost = document.createElement('input');
 			inputTextCost.type = 'number';
 			inputTextCost.value = item.Cost;
@@ -159,7 +165,7 @@ render = async () => {
 			};
 			dateText.textContent = item.date;
 			textScore.innerText = `Магазин "${item.Score}"`;
-			textCost.innerText = item.Cost + ' р.';
+			textCost.innerText = `${item.Cost}  р.`;
 			textCost.className = item.isCheck ? 'textCost-expenses done-textCost' : 'textCost-expenses';
 			box.appendChild(textScore);
 			box.appendChild(dateText);
@@ -183,6 +189,11 @@ EditOk = async (index) => {
 	inputSpent = document.getElementById('inputId2');
 	inputSpent.addEventListener('change', updateSpent);
 
+	if(inputCost.value === "" || inputSpent.value === ""){
+		alert("заполните все данные на изменение")
+		return
+	} 
+
 	const resp = await fetch('http://localhost:8000/editExpenses', {
 		method: 'PATCH',
 		headers: {
@@ -195,7 +206,9 @@ EditOk = async (index) => {
 			Score: inputSpent.value,
 		})
 	});
+
 	const result = await resp.json();
+	
 	allExpenses = result.data;
 	curentIndex = null;
 	localStorage.setItem('expenses', JSON.stringify(allExpenses));
