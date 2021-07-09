@@ -28,21 +28,17 @@ window.onload = async function init () {
 	const result = await resp.json();
 	allExpenses = result.data;
 
-	sumFunction();
+	sumFunction(allExpenses);
 	render();
 };	
 
-sumFunction = async () => {
-	testFunction = (arr) => {
-    let sum = 0 ;
-    arr.forEach(element => {
-      let {_id, Cost, Score} = element;
-      sum += Number(Cost);
-    });
-    return sum;
-  };
-	document.getElementById('sum').textContent = testFunction(allExpenses) + " р." ;
-}
+sumFunction = async (arr) => {
+	let initialValue = 0;
+	let sum = arr.reduce(function (accumulator, currentValue) {
+    return accumulator + currentValue.Cost;
+}, initialValue)
+	document.getElementById('sum').textContent = `${sum} р.` ;
+};
 
 onClickButton = async () => {
 	const resp = await fetch('http://localhost:8000/createExpenses', {
@@ -66,7 +62,7 @@ onClickButton = async () => {
 	inputCost.value = "";
   inputSpent.value = "";
 
-	sumFunction();
+	sumFunction(allExpenses);
 	render();
 };
 
@@ -99,7 +95,7 @@ render = async () => {
 		container.appendChild(boxPrice);
 
 		const numbering = document.createElement('p');
-		numbering.textContent = index + 1 + ")";
+		numbering.textContent = `${index + 1} )`;
 		
 		numbering.onchange = function () {
 			onChangeNumbering(index);
@@ -162,7 +158,7 @@ render = async () => {
 				DeleteItem(index,container);
 			};
 			dateText.textContent = item.date;
-			textScore.innerText = "Магазин " + `"${item.Score}"`;
+			textScore.innerText = `Магазин "${item.Score}"`;
 			textCost.innerText = item.Cost + ' р.';
 			textCost.className = item.isCheck ? 'textCost-expenses done-textCost' : 'textCost-expenses';
 			box.appendChild(textScore);
@@ -204,7 +200,7 @@ EditOk = async (index) => {
 	curentIndex = null;
 	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 
-	sumFunction();
+	sumFunction(allExpenses);
 	render();
 };
 
@@ -228,7 +224,7 @@ DeleteItem = async (index, item) => {
 	allExpenses = result.data;
 	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 
-	sumFunction()
+	sumFunction(allExpenses)
 	render();
 };
 
