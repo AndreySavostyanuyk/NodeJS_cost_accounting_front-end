@@ -107,17 +107,17 @@ render = async () => {
 		box.appendChild(numbering);
 
 		if (index === curentIndex) {
-			const textScore = document.createElement('input');
-			textScore.type = 'text';
-			textScore.value = item.Score;
-			textScore.id = 'inputId2';
-			container.appendChild(textScore);
+			const inputTextScore = document.createElement('input');
+			inputTextScore.type = 'textCost';
+			inputTextScore.value = item.Score;
+			inputTextScore.id = 'inputId2';
+			container.appendChild(inputTextScore);
 			
-			const textCost = document.createElement('input');
-			textCost.type = 'number';
-			textCost.value = item.Cost;
-			textCost.id = 'inputId';
-			container.appendChild(textCost);
+			const inputTextCost = document.createElement('input');
+			inputTextCost.type = 'number';
+			inputTextCost.value = item.Cost;
+			inputTextCost.id = 'inputId';
+			container.appendChild(inputTextCost);
 
 			const boxImg = document.createElement('div');
 			boxImg.className = 'expenses-boxImg';
@@ -138,8 +138,8 @@ render = async () => {
 				EditOk(index);
 			};
 		} else {
-			const text2 = document.createElement('p');
-			const text = document.createElement('p');
+			const textScore = document.createElement('p');
+			const textCost = document.createElement('p');
 			const dateText = document.createElement('p')
 			
 			const boxImg = document.createElement('div');
@@ -162,12 +162,12 @@ render = async () => {
 				DeleteItem(index,container);
 			};
 			dateText.textContent = item.date;
-			text2.innerText = "Магазин " + `"${item.Score}"`;
-			text.innerText = item.Cost + ' р.';
-			text.className = item.isCheck ? 'text-expenses done-text' : 'text-expenses';
-			box.appendChild(text2);
+			textScore.innerText = "Магазин " + `"${item.Score}"`;
+			textCost.innerText = item.Cost + ' р.';
+			textCost.className = item.isCheck ? 'textCost-expenses done-textCost' : 'textCost-expenses';
+			box.appendChild(textScore);
 			box.appendChild(dateText);
-			boxPrice.appendChild(text);
+			boxPrice.appendChild(textCost);
 		};	
 		content.appendChild(container);
 	});
