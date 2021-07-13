@@ -5,6 +5,8 @@ let inputCost = null;
 let inputSpent = null;
 let flag = false;
 let curentIndex;
+let specificIndex;
+let specificIndex2;
 let Cost;
 let Score;
 let sum;
@@ -32,15 +34,13 @@ window.onload = async function init () {
 	render();
 };	
 
-sumFunction = async (arr) => {
-
-	let sum = arr.reduce((acc,el) => acc + el.Cost, 0)
+ sumFunction = async (arr) => {
+	const sum = arr.reduce((acc,el) => acc + el.Cost, 0);
 	document.getElementById('sum').textContent = `${sum} р.` ;
 };
 
 onClickButton = async () => {
-
-	if(inputCost.value === "" || inputSpent.value === ""){
+	if(!inputCost.value || !inputSpent.value){
 		alert("заполните все данные")
 		return
 	} 
@@ -84,18 +84,24 @@ render = async () => {
 	while(content.firstChild) {
 		content.removeChild(content.firstChild);
 	};
-		
 	allExpenses.map((item, index) => {
 		const container = document.createElement('div');
 		container.id = `expenses-${index}`;
 		container.className = 'expenses-container';
-		
+
 		const box = document.createElement('div');
 		box.className = 'expenses-box';
-		container.appendChild(box);
 
+		box.addEventListener('dblclick', function (e) {
+			EditItem2(index);
+		});
+
+		container.appendChild(box);
 		const boxPrice = document.createElement('div');
 		boxPrice.className = 'expenses-boxPrice';
+		boxPrice.addEventListener('dblclick', function (e) {
+			EditItem3(index);
+		});
 		container.appendChild(boxPrice);
 
 		const numbering = document.createElement('p');
@@ -106,44 +112,91 @@ render = async () => {
 		}
 		box.appendChild(numbering);
 
-		if (index === curentIndex) {
-			const inputTextScore = document.createElement('input');
-			inputTextScore.type = 'textCost';
-			inputTextScore.value = item.Score;
-			inputTextScore.id = 'inputId2';
-			container.appendChild(inputTextScore);
+		if (index === curentIndex){
+				const inputTextScore = document.createElement('input');
+				inputTextScore.type = 'text';
+				inputTextScore.value = item.Score;
+				inputTextScore.id = 'inputId2';
+				container.appendChild(inputTextScore);
+				box.className = 'displayNone';
+
+				if(index === specificIndex){
+					inputTextScore.onblur = () => {
+						onKeyStore(index);
+					};
+				};
+
+				if(index === curentIndex || index === specificIndex2 ){
+					const inputTextCost = document.createElement('input');
+					inputTextCost.type = 'number';
+					inputTextCost.value = item.Cost;
+					inputTextCost.id = 'inputId';
+					container.appendChild(inputTextCost);
+
+					if(index === specificIndex2){
+						inputTextCost.onblur = () => {
+							onKeyCost(index);
+						};
+					};
+				};
 			
-			box.className = 'displayNone';
+			if(index === curentIndex){
+				const boxImg = document.createElement('div');
+				boxImg.className = 'expenses-boxImg';
+				container.appendChild(boxImg);
+				
+				const imageClear = document.createElement('img'); 
+				imageClear.src = 'images/clear.svg';
+				boxImg.appendChild(imageClear);
 
-			const inputTextCost = document.createElement('input');
-			inputTextCost.type = 'number';
-			inputTextCost.value = item.Cost;
-			inputTextCost.id = 'inputId';
-			container.appendChild(inputTextCost);
+				imageClear.onclick = function () {
+					EditClear(index);
+				};
 
-			const boxImg = document.createElement('div');
-			boxImg.className = 'expenses-boxImg';
-			container.appendChild(boxImg);
-			
-			const imageClear = document.createElement('img'); 
-			imageClear.src = 'images/clear.svg';
-			boxImg.appendChild(imageClear);
-
-			imageClear.onclick = function () {
-				EditClear(index);
-			};
-
-			const imageOk = document.createElement('img');
-			imageOk.src = 'images/ok.svg';
-			boxImg.appendChild(imageOk);
-			imageOk.onclick = function () {
-				EditOk(index);
-			};
+				const imageOk = document.createElement('img');
+				imageOk.src = 'images/ok.svg';
+				boxImg.appendChild(imageOk);
+				imageOk.onclick = function () {
+					EditOk(index);
+				};
+			}
 		} else {
-			const textScore = document.createElement('p');
-			const textCost = document.createElement('p');
-			const dateText = document.createElement('p')
+			if(index === specificIndex){
+				const inputTextScore = document.createElement('input');
+				inputTextScore.type = 'text';
+				inputTextScore.value = item.Score;
+				inputTextScore.id = 'inputId2';
+				box.appendChild(inputTextScore);
+					inputTextScore.onblur = () => {
+						onKeyStore(index);
+					};
+			}else{
+				const textScore = document.createElement('p');
+				textScore.innerText = `Магазин "${item.Score}"`;
+				box.appendChild(textScore);
+			};
+
+			if(index === specificIndex2){
+				const inputTextCost = document.createElement('input');
+				inputTextCost.type = 'number';
+				inputTextCost.value = item.Cost;
+				inputTextCost.id = 'inputId';
+				container.appendChild(inputTextCost);
+
+				if(index === specificIndex2){
+					inputTextCost.onblur = () => {
+						onKeyCost(index);
+					};
+				};
 			
+			}else{
+				const textCost = document.createElement('p');
+				textCost.innerText = `${item.Cost}  р.`;
+				textCost.className = item.isCheck ? 'textCost-expenses done-textCost' : 'textCost-expenses';
+				boxPrice.appendChild(textCost);
+			}
+
+			const dateText = document.createElement('p')
 			const boxImg = document.createElement('div');
 			boxImg.className = 'expenses-boxImg';
 			container.appendChild(boxImg);
@@ -164,12 +217,7 @@ render = async () => {
 				DeleteItem(index,container);
 			};
 			dateText.textContent = item.date;
-			textScore.innerText = `Магазин "${item.Score}"`;
-			textCost.innerText = `${item.Cost}  р.`;
-			textCost.className = item.isCheck ? 'textCost-expenses done-textCost' : 'textCost-expenses';
-			box.appendChild(textScore);
 			box.appendChild(dateText);
-			boxPrice.appendChild(textCost);
 		};	
 		content.appendChild(container);
 	});
@@ -189,10 +237,58 @@ EditOk = async (index) => {
 	inputSpent = document.getElementById('inputId2');
 	inputSpent.addEventListener('change', updateSpent);
 
-	if(inputCost.value === "" || inputSpent.value === ""){
-		alert("заполните все данные на изменение")
-		return
-	} 
+	const resp = await fetch('http://localhost:8000/editExpenses', {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8',
+			'Access-Control-Alow-Origin': '*'
+		},
+		body: JSON.stringify( {
+			_id: allExpenses[index]._id,
+			Cost: inputCost.value ,
+			Score: inputSpent.value
+		})
+	});
+	const result = await resp.json();
+	allExpenses = result.data;
+	curentIndex = null;
+	specificIndex = null;
+	specificIndex2 = null;
+	localStorage.setItem('expenses', JSON.stringify(allExpenses));
+
+	sumFunction(allExpenses);
+	render();
+};
+
+EditClear = (index) => {
+	curentIndex = null;
+	specificIndex = null;
+	specificIndex2 = null;
+
+	render();
+};
+
+EditItem = (index, item, container) => {
+	curentIndex = index;
+	
+	render();
+};
+
+EditItem2 = (index, item, container) => {
+	specificIndex = index;
+
+	render();
+};
+
+EditItem3 = (index, item, container) => {
+	specificIndex2 = index;
+
+	render();
+};
+
+onKeyCost = async (index) => {
+	inputCost = document.getElementById('inputId');
+	inputCost.addEventListener('change', updateCost);
 
 	const resp = await fetch('http://localhost:8000/editExpenses', {
 		method: 'PATCH',
@@ -202,8 +298,7 @@ EditOk = async (index) => {
 		},
 		body: JSON.stringify( {
 			_id: allExpenses[index]._id,
-			Cost: inputCost.value,
-			Score: inputSpent.value,
+			Cost: inputCost.value
 		})
 	});
 
@@ -211,23 +306,39 @@ EditOk = async (index) => {
 	
 	allExpenses = result.data;
 	curentIndex = null;
+	specificIndex = null;
+	specificIndex2 = null;
 	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 
 	sumFunction(allExpenses);
 	render();
-};
+}
 
-EditClear = (index) => {
+onKeyStore = async (index) => {
+	inputSpent = document.getElementById('inputId2');
+	inputSpent.addEventListener('change', updateSpent);
+
+	const resp = await fetch('http://localhost:8000/editExpenses', {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8',
+			'Access-Control-Alow-Origin': '*'
+		},
+		body: JSON.stringify( {
+			_id: allExpenses[index]._id,
+			Score: inputSpent.value
+		})
+	});
+	const result = await resp.json();
+	allExpenses = result.data;
 	curentIndex = null;
+	specificIndex = null;
+	specificIndex2 = null;
+	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 
+	sumFunction(allExpenses);
 	render();
-};
-
-EditItem = (index, item, container) => {
-	curentIndex = index;
-
-	render();
-};
+}
 
 DeleteItem = async (index, item) => {
 	const resp = await fetch(`http://localhost:8000/deleteExpenses?_id=${allExpenses[index]._id}`, {
