@@ -34,15 +34,15 @@ window.onload = async function init () {
 	render();
 };	
 
- sumFunction = async (arr) => {
+sumFunction = async (arr) => {
 	const sum = arr.reduce((acc,el) => acc + el.Cost, 0);
-	document.getElementById('sum').textContent = `${sum} р.` ;
+	document.getElementById('sum').textContent = `${sum} р.`;
 };
 
 onClickButton = async () => {
-	if(!inputCost.value || !inputSpent.value){
-		alert("заполните все данные")
-		return
+	if(!inputCost.value || !inputSpent.value) {
+		alert("заполните все данные");
+		return;
 	} 
 
 	const resp = await fetch('http://localhost:8000/createExpenses', {
@@ -92,27 +92,27 @@ render = async () => {
 		const box = document.createElement('div');
 		box.className = 'expenses-box';
 
-		box.addEventListener('dblclick', function (e) {
-			EditItem2(index);
+		box.addEventListener('dblclick', (e) => {
+			editItem2(index);
 		});
 
 		container.appendChild(box);
 		const boxPrice = document.createElement('div');
 		boxPrice.className = 'expenses-boxPrice';
-		boxPrice.addEventListener('dblclick', function (e) {
-			EditItem3(index);
+		boxPrice.addEventListener('dblclick', (e) => {
+			editItem3(index);
 		});
 		container.appendChild(boxPrice);
 
 		const numbering = document.createElement('p');
 		numbering.textContent = `${index + 1} )`;
 		
-		numbering.onchange = function () {
+		numbering.onchange = () => {
 			onChangeNumbering(index);
 		}
 		box.appendChild(numbering);
 
-		if (index === curentIndex){
+		if (index === curentIndex) {
 				const inputTextScore = document.createElement('input');
 				inputTextScore.type = 'text';
 				inputTextScore.value = item.Score;
@@ -120,27 +120,27 @@ render = async () => {
 				container.appendChild(inputTextScore);
 				box.className = 'displayNone';
 
-				if(index === specificIndex){
+				if(index === specificIndex) {
 					inputTextScore.onblur = () => {
 						onKeyStore(index);
 					};
 				};
 
-				if(index === curentIndex || index === specificIndex2 ){
+				if(index === curentIndex || index === specificIndex2) {
 					const inputTextCost = document.createElement('input');
 					inputTextCost.type = 'number';
 					inputTextCost.value = item.Cost;
 					inputTextCost.id = 'inputId';
 					container.appendChild(inputTextCost);
 
-					if(index === specificIndex2){
+					if(index === specificIndex2) {
 						inputTextCost.onblur = () => {
 							onKeyCost(index);
 						};
 					};
 				};
 			
-			if(index === curentIndex){
+			if(index === curentIndex) {
 				const boxImg = document.createElement('div');
 				boxImg.className = 'expenses-boxImg';
 				container.appendChild(boxImg);
@@ -149,19 +149,19 @@ render = async () => {
 				imageClear.src = 'images/clear.svg';
 				boxImg.appendChild(imageClear);
 
-				imageClear.onclick = function () {
-					EditClear(index);
+				imageClear.onclick = () => {
+					editClear(index);
 				};
 
 				const imageOk = document.createElement('img');
 				imageOk.src = 'images/ok.svg';
 				boxImg.appendChild(imageOk);
-				imageOk.onclick = function () {
-					EditOk(index);
+				imageOk.onclick = () => {
+					editOk(index);
 				};
 			}
 		} else {
-			if(index === specificIndex){
+			if(index === specificIndex) {
 				const inputTextScore = document.createElement('input');
 				inputTextScore.type = 'text';
 				inputTextScore.value = item.Score;
@@ -170,29 +170,29 @@ render = async () => {
 					inputTextScore.onblur = () => {
 						onKeyStore(index);
 					};
-			}else{
+			} else {
 				const textScore = document.createElement('p');
 				textScore.innerText = `Магазин "${item.Score}"`;
 				box.appendChild(textScore);
 			};
 
-			if(index === specificIndex2){
+			if(index === specificIndex2) {
 				const inputTextCost = document.createElement('input');
 				inputTextCost.type = 'number';
 				inputTextCost.value = item.Cost;
 				inputTextCost.id = 'inputId';
 				container.appendChild(inputTextCost);
 
-				if(index === specificIndex2){
+				if(index === specificIndex2) {
 					inputTextCost.onblur = () => {
 						onKeyCost(index);
 					};
 				};
 			
-			}else{
+			} else {
 				const textCost = document.createElement('p');
 				textCost.innerText = `${item.Cost}  р.`;
-				textCost.className = item.isCheck ? 'textCost-expenses done-textCost' : 'textCost-expenses';
+				textCost.className = `textCost-expenses ${item.isCheck ? 'done-textCost' : ''}`
 				boxPrice.appendChild(textCost);
 			}
 
@@ -205,16 +205,16 @@ render = async () => {
 			imageEdit.src = 'images/edit.svg';
 			boxImg.appendChild(imageEdit);
 
-			imageEdit.onclick = function () {
-				EditItem(index);
+			imageEdit.onclick = () => {
+				editItem(index);
 			};
 
 			const imageDelete = document.createElement('img');
 			imageDelete.src = 'images/delete.svg';
 			boxImg.appendChild(imageDelete);
 		
-			imageDelete.onclick = function () {
-				DeleteItem(index,container);
+			imageDelete.onclick = () => {
+				deleteItem(index,container);
 			};
 			dateText.textContent = item.date;
 			box.appendChild(dateText);
@@ -230,7 +230,7 @@ onChangeNumbering = (index) => {
 	render();
 };
 
-EditOk = async (index) => {
+editOk = async (index) => {
 	inputCost = document.getElementById('inputId');
 	inputCost.addEventListener('change', updateCost);
 
@@ -245,7 +245,7 @@ EditOk = async (index) => {
 		},
 		body: JSON.stringify( {
 			_id: allExpenses[index]._id,
-			Cost: inputCost.value ,
+			Cost: inputCost.value,
 			Score: inputSpent.value
 		})
 	});
@@ -260,7 +260,7 @@ EditOk = async (index) => {
 	render();
 };
 
-EditClear = (index) => {
+editClear = (index) => {
 	curentIndex = null;
 	specificIndex = null;
 	specificIndex2 = null;
@@ -268,19 +268,19 @@ EditClear = (index) => {
 	render();
 };
 
-EditItem = (index, item, container) => {
+editItem = (index, item, container) => {
 	curentIndex = index;
 	
 	render();
 };
 
-EditItem2 = (index, item, container) => {
+editItem2 = (index, item, container) => {
 	specificIndex = index;
 
 	render();
 };
 
-EditItem3 = (index, item, container) => {
+editItem3 = (index, item, container) => {
 	specificIndex2 = index;
 
 	render();
@@ -340,7 +340,7 @@ onKeyStore = async (index) => {
 	render();
 }
 
-DeleteItem = async (index, item) => {
+deleteItem = async (index, item) => {
 	const resp = await fetch(`http://localhost:8000/deleteExpenses?_id=${allExpenses[index]._id}`, {
 		method: 'DELETE'
 	});
@@ -352,7 +352,7 @@ DeleteItem = async (index, item) => {
 	render();
 };
 
-DeleteAll = async () => {
+deleteAll = async () => {
 	const resp = await fetch('http://localhost:8000/deleteAllExpenses', {
 		method: 'DELETE'
 	});
