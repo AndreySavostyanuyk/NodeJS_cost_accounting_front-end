@@ -39,7 +39,7 @@ const sumFunction = async (arr) => {
 	document.getElementById('sum').textContent = `${sum} р.`;
 };
 
-onClickButton = async () => {
+const onClickButton = async () => {
 	if (!inputCost.value || !inputSpent.value) {
 		alert("заполните все данные");
 		return;
@@ -224,7 +224,6 @@ const render = async () => {
 };
 
 const onChangeNumbering = (index) => {
-	allExpenses[index].isCheck = !allExpenses[index].isCheck;
 	localStorage.setItem('expenses', JSON.stringify(allExpenses));
 
 	render();
