@@ -192,7 +192,7 @@ const render = async () => {
 			} else {
 				const textCost = document.createElement('p');
 				textCost.innerText = `${item.Cost}  р.`;
-				textCost.className = `textCost-expenses ${item.isCheck ? 'done-textCost' : ''}`
+				textCost.className = `textCost-expenses`
 				boxPrice.appendChild(textCost);
 			}
 
@@ -221,12 +221,6 @@ const render = async () => {
 		};	
 		content.appendChild(container);
 	});
-};
-
-const onChangeNumbering = (index) => {
-	localStorage.setItem('expenses', JSON.stringify(allExpenses));
-
-	render();
 };
 
 const editOk = async (index) => {
