@@ -3,6 +3,10 @@ body {
   background-color: #b2c4d4;
 }
 
+.container_box p {
+font-size: 1.5rem;
+}
+
 h1 {
   font-weight: 200;
   font-style: italic;
@@ -23,15 +27,24 @@ h1 {
 }
 
 .container_items {
-  max-width: 700px;
+  width: 90%;
   display: flex;
   flex-direction: column;
-  min-width: 624px;
+}
+
+.container_item {
+  width: 35%;
+  min-width: 260px;
+}
+
+.container_item input {
+  width: 100%;
 }
 
 .max_width {
+  margin-right: 40px;
   width: 100%;
-  margin-right: 50px;
+  min-width: 230px;
 }
 
 .max_width input {
@@ -42,13 +55,12 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #aabfd2;
   padding: 40px;
   border-radius: 1rem;
 }
 
 input {
-  padding: 10px;
+  padding: 20px 0px 20px 7px;
   border-radius: 5px;
   border: none;
   margin-right: 10px;
@@ -57,7 +69,7 @@ input {
 button {
   margin-left: 25px;
   padding: 0px 20px;
-  margin-top: 50px;
+  margin-top: 75px;
   border: 0px;
   border-radius: 5px;
   background-color: #45c355;
@@ -81,10 +93,12 @@ button {
 .container_box {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .sum_text p {
-  font-size: 1.7rem;
+  font-size: 2rem;
 }
 
 input[type="number"] {
@@ -101,13 +115,150 @@ input[type="number"]::-webkit-inner-spin-button {
 .expenses-box {
   display: flex;
   flex-direction: row;
-  width: 60%;
+  width: 30%;
+
+}
+
+.expenses-boxPrice {
+  width: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .expenses-boxImg {
   display: flex;
 }
 
+.expenses-boxImg img {
+  width: 45px;
+}
+
 .expenses-container p {
+  font-size: 1.8rem;
+}
+
+#content-page {
+height: 59vh;
+overflow: auto;
+}
+
+input {
   font-size: 1.2rem;
 }
+
+.displayNone {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.expenses-boxDate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item_text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+}
+.item_text:hover {
+  overflow: auto;
+  text-overflow: initial;
+  overflow-wrap:break-word;
+  white-space:initial;
+}
+
+#sum {
+  margin-left: 5px;
+}
+
+@media screen and (max-width: 800px) {
+  .container_box p {
+    font-size: 1rem;
+  }
+
+  .max_width {
+    min-width: 150px;
+  }
+
+  .container_item {
+    min-width: 150px;
+    width: 100%;
+  }
+
+  button {
+    margin-top: 51px;
+    height: 50px;
+    width: 100px;
+    margin-left: 0px;
+  }
+
+  .expenses-container p {
+    font-size: 1rem ;
+  }
+
+  input {
+    font-size: 0.8rem;
+  }
+
+  .container_box {
+    flex-direction: column;
+  }
+
+  h1{
+    text-align: center;
+  }
+
+  .expenses-boxImg img {
+    width: 25px;
+  }
+
+  .sum_text p {
+    font-size: 1.5rem;
+  }
+
+  .expenses-boxPrice {
+    min-width: 200px;
+    justify-content: end;
+    margin-left: 22px;
+    margin-bottom: 10px;
+  }
+
+  .expenses-box {
+    min-width: 200px;
+  }
+
+  .expenses-container {
+    flex-direction: column;
+    width: 100vw;
+  }
+
+  .expenses-boxDate {
+    min-width: 200px;
+    justify-content: end;
+    margin-left: 22px;
+    margin-bottom: 10px;
+  }
+
+  .displayNone {
+    min-width: 200px;
+    margin-bottom: 10px;
+  }
+
+  .expenses-boxImg {
+    margin-left: 22px;
+  }
+
+  .main_box {
+    padding: 0px;
+  }
+
+  #content-page {
+    margin-bottom: 10px;
+  }
+}
+

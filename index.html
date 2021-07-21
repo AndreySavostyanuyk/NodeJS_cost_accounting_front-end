@@ -9,7 +9,7 @@
   <title>Document</title>
 </head>
 <body>
-<div class="main">
+
   <div class="main_box">
     <h1>Учет моих расходов</h1>
     <div class="container">
@@ -20,27 +20,28 @@
             <input 
             type="text"
             pattern="^[A-Za-zА-Яа-яЁё\s]"
-            placeholder="Куда было потрачено:" 
+            placeholder="Куда было потрачено:"
             id="add-expenses2" >
           </div>
           <div class="container_item">
             <p>Сколько было потрачено:</p>
             <input
             type="number"
-            maxlength="10" 
+            oninput="maxLengthCheck(this)"
+            maxlength="9"
             placeholder="Сколько было потрачено:" 
             id="add-expenses">
           </div>
           <button onclick="onClickButton()">Добавить</button>
         </div>
         <div class="sum_text">
-          <p>Итого:</p>
+          <p>Итого: </p>
           <p id="sum"></p>
         </div>
         <div id="content-page"></div>
       </div>
     </div>
   </div>
-</div>
+
 </body>
 </html>
